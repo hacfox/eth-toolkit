@@ -1,4 +1,4 @@
-module eth-toolkit
+module github.com/hacfox/eth-toolkit
 
 go 1.17
 
