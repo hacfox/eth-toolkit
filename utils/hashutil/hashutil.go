@@ -3,8 +3,8 @@ package hashutil
 import (
 	"crypto/sha256"
 	"encoding/hex"
-	"eth-toolkit/utils/convert"
 
+	"github.com/hacfox/eth-toolkit/utils/convert"
 	"github.com/inwecrypto/sha3"
 	"golang.org/x/crypto/ripemd160"
 )

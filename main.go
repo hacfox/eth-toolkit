@@ -1,10 +1,10 @@
 package main
 
 import (
-	"eth-toolkit/contract"
 	"fmt"
 
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/hacfox/eth-toolkit/contract"
 )
 
 func main() {
