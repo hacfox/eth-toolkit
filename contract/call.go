@@ -62,6 +62,7 @@ type ethCallResponse struct {
 	responseCommon
 	Result string `json:"result"`
 }
+
 type EthRPC struct {
 	RPCURL string
 }
@@ -70,6 +71,7 @@ func Trim0xPrefix(hex string) string {
 	hex = strings.TrimSpace(hex)
 	return strings.TrimPrefix(hex, "0x")
 }
+
 func (rpc *EthRPC) GetTokenDecimals(tokenAddr string) string {
 	method := "decimals()"
 	data := hashutil.Sha3Sig4Bytes(method)
@@ -126,6 +128,25 @@ func (rpc *EthRPC) GetTokenSymbol(tokenAddr string) string {
 	return strings.TrimSpace(symbol)
 }
 
+func (rpc *EthRPC) GetApprove(tokenAddr string) string {
+	method := "approve"
+	data := hashutil.Sha3Sig4Bytes(method)
+	fmt.Println(data)
+	result := rpc.EthCall("", tokenAddr, 0, 0, data, Latest)
+	fmt.Println(result)
+	if Trim0xPrefix(result) == "" {
+		return ""
+	}
+
+	index := 0
+	if len(result) > 66 {
+		index = 2 + 64 + 64
+	}
+
+	name := HexToString(result[index:])
+	return strings.TrimSpace(name)
+}
+
 func HexToString(raw string) string {
 	raw = strings.TrimPrefix(raw, "0x")
 	bytesArr, err := hex.DecodeString(raw)
@@ -142,6 +163,7 @@ func Hex0xPrefix(hex string) string {
 
 	return "0x" + hex
 }
+
 func (rpc *EthRPC) EthCall(from, to string, gas, gasPrice uint64, data string, q DefaultBlock) string {
 	method := "eth_call"
 	param := ethCallRequest{
@@ -175,6 +197,7 @@ func generateReqParam(method string, params interface{}) requestCommon {
 		ID:      1,
 	}
 }
+
 func (rpc *EthRPC) request(reqParam requestCommon, target interface{}) {
 	url := rpc.RPCURL
 	reqParamBytes, err := json.Marshal(reqParam)
@@ -182,11 +205,21 @@ func (rpc *EthRPC) request(reqParam requestCommon, target interface{}) {
 		fmt.Println(err)
 		return
 	}
-
-	bodyBytes, _ := post(url, bytes.NewBuffer(reqParamBytes))
-	err = json.Unmarshal(bodyBytes, target)
-	if err != nil {
-		log.Fatalf("Request body: %v", string(reqParamBytes))
+	count := 0
+	for {
+		if count > 3 {
+			log.Panicf("Max retry")
+			return
+		}
+		count++
+		bodyBytes, _ := post(url, bytes.NewBuffer(reqParamBytes))
+		err = json.Unmarshal(bodyBytes, target)
+		if err != nil {
+			log.Panicf("Request body: %v", string(reqParamBytes))
+			log.Panicf("Response: %v", string(bodyBytes))
+		} else {
+			return
+		}
 	}
 }
 

@@ -7,12 +7,12 @@ import (
 	"math/big"
 
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/hacfox/eth-toolkit/client"
+	"github.com/hacfox/eth-toolkit/rpc"
 )
 
 func GetBalance(address string) *big.Float {
 	account := common.HexToAddress(address)
-	c := client.GetEthClient()
+	c := rpc.GetEthClient()
 	ba, err := c.BalanceAt(context.Background(), account, nil)
 	if err != nil {
 		log.Fatal(err)
