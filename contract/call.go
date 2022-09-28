@@ -215,6 +215,7 @@ func (rpc *EthRPC) request(reqParam requestCommon, target interface{}) {
 		bodyBytes, _ := post(url, bytes.NewBuffer(reqParamBytes))
 		err = json.Unmarshal(bodyBytes, target)
 		if err != nil {
+			log.Infof("reqParam: %v", reqParam)
 			log.Errorf("Request body: %v", string(reqParamBytes))
 			log.Errorf("Response: %v", string(bodyBytes))
 		} else {
