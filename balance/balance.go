@@ -2,12 +2,12 @@ package balance
 
 import (
 	"context"
-	"log"
 	"math"
 	"math/big"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/hacfox/eth-toolkit/rpc"
+	"github.com/hacfox/eth-toolkit/utils/log"
 )
 
 func GetBalance(address string) *big.Float {

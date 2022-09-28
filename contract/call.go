@@ -7,13 +7,13 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"strconv"
 	"strings"
 	"time"
 
 	"github.com/hacfox/eth-toolkit/utils/hashutil"
+	"github.com/hacfox/eth-toolkit/utils/log"
 )
 
 type DefaultBlock string
@@ -208,18 +208,20 @@ func (rpc *EthRPC) request(reqParam requestCommon, target interface{}) {
 	count := 0
 	for {
 		if count > 3 {
-			log.Panicf("Max retry")
+			log.Warn("Max retry")
 			return
 		}
 		count++
 		bodyBytes, _ := post(url, bytes.NewBuffer(reqParamBytes))
 		err = json.Unmarshal(bodyBytes, target)
 		if err != nil {
-			log.Panicf("Request body: %v", string(reqParamBytes))
-			log.Panicf("Response: %v", string(bodyBytes))
+			log.Errorf("Request body: %v", string(reqParamBytes))
+			log.Errorf("Response: %v", string(bodyBytes))
 		} else {
 			return
 		}
+
+		time.Sleep(3 * time.Second)
 	}
 }
 

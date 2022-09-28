@@ -1,7 +1,6 @@
 package rpc
 
 import (
-	"log"
 	"math/big"
 	"sync"
 
@@ -9,6 +8,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/hacfox/eth-toolkit/abis"
+	"github.com/hacfox/eth-toolkit/utils/log"
 )
 
 var client *ethclient.Client

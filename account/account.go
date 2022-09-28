@@ -2,10 +2,11 @@ package account
 
 import (
 	"crypto/ecdsa"
-	"log"
 
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto"
+
+	"github.com/hacfox/eth-toolkit/utils/log"
 )
 
 func CreateAddress() {
@@ -16,14 +17,14 @@ func CreateAddress() {
 
 	privateKeyBytes := crypto.FromECDSA(privateKey)
 	privateKeyStr := hexutil.Encode(privateKeyBytes)[2:]
-	log.Println(privateKeyStr)
+	log.Info(privateKeyStr)
 
 	publicKey := privateKey.Public()
 	publicECDSA := publicKey.(*ecdsa.PublicKey)
 	publicKeyBytes := crypto.FromECDSAPub(publicECDSA)
 	publicKeyStr := hexutil.Encode(publicKeyBytes)[4:]
-	log.Println(publicKeyStr)
+	log.Info(publicKeyStr)
 
 	address := crypto.PubkeyToAddress(*publicECDSA).Hex()
-	log.Println(address)
+	log.Info(address)
 }
