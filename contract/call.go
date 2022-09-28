@@ -207,11 +207,14 @@ func (rpc *EthRPC) request(reqParam requestCommon, target interface{}) {
 	}
 	count := 0
 	for {
-		if count > 3 {
+		if count > 5 {
 			log.Println("Max retry")
 			return
+		} else {
+			count++
+			log.Printf("retry time: [%d] max: 5", count)
 		}
-		count++
+
 		bodyBytes, _ := post(url, bytes.NewBuffer(reqParamBytes))
 		err = json.Unmarshal(bodyBytes, target)
 		if err != nil {
